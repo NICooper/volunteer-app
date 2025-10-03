@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#nom-du-projet" class="md-skip">
+        <a href="#app-communautaire" class="md-skip">
           Aller au contenu
         </a>
       
@@ -765,17 +765,26 @@
   
 
 
-<h1 id="nom-du-projet">Nom du projet<a class="headerlink" href="#nom-du-projet" title="Permanent link">&para;</a></h1>
+<h1 id="app-communautaire">App Communautaire<a class="headerlink" href="#app-communautaire" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p><strong>Thèmes</strong>: Science de données, Génie logiciel<br />
-<strong>Superviseur</strong>: Nom du superviseur<br />
-<strong>Collaborateurs:</strong> Nom de(s) collaborateur(s) et partenaire(s)</p>
+<p><strong>Thèmes</strong>: Génie logiciel<br />
+<strong>Superviseur</strong>: Louis Édouard Lafontant</p>
 </blockquote>
 <h2 id="equipe">Équipe<a class="headerlink" href="#equipe" title="Permanent link">&para;</a></h2>
+<p>Nicholas Cooper</p>
 <h2 id="description-du-projet">Description du projet<a class="headerlink" href="#description-du-projet" title="Permanent link">&para;</a></h2>
+<p>Une application mobile pour faciliter la recherche de quarts de bénévolat et connecter les bénévoles.</p>
 <h3 id="contexte">Contexte<a class="headerlink" href="#contexte" title="Permanent link">&para;</a></h3>
+<p>Ce projet vise le bénévolat et la création de communautés.</p>
+<p>Les organisations ont besoin de bénévoles pour accomplir leurs travaux communautaires. Les opportunités de bénévolat peuvent être permanentes ou offertes par quart de travail. Ce projet porte sur le bénévolat par quart. Les organisations doivent gérer les quarts, gérer leurs bénévoles et recruter de nouveaux bénévoles.</p>
+<p>Toute organisation semble avoir un système différent pour la gestion des quarts. Pour l’inscription des bénévoles, certaines organisations utilisent des formulaires Google, d’autres des formulaires en ligne, et d'autres exigent l’envoi d’un courriel. La confirmation et gestion des quarts est souvent faite par une application de gestion payante ou par simple courriel. Il n’y a pas de cohérence d’une organisation à l’autre.</p>
+<p>Pour que les gens s’engagent, il faut qu’ils soient informés des opportunités de bénévolat. C’est surprenant comment ça peut être difficile. Certaines plateformes comme Kijiji proposent des annonces de bénévolat, mais peu d’organisations y publient. Le site accesbenevolat.org offre de nombreux postes permanents et quarts récurrents, mais peu de quarts ponctuels. D’après mon expérience personnelle, j’ai surtout entendu parler des opportunités de bénévolat par bouche-à-oreille. Parfois je voulais faire du bénévolat mais trouver des opportunités en ligne s’avère trop difficile.</p>
 <h3 id="problematique-ou-motivations">Problématique ou motivations<a class="headerlink" href="#problematique-ou-motivations" title="Permanent link">&para;</a></h3>
+<p>Le nombre de personnes faisant du bénévolat au Canada a fortement diminué au cours de la dernière décennie, et les adultes savent qu’il peut être difficile de se faire des amis après l’université. L’objectif de cette application est de réduire les obstacles à la recherche d’opportunités de bénévolat ponctuelles et d’encourager les connexions sociales entre bénévoles. Pour atteindre ces objectifs, l’application doit être utile à de nombreuses organisations, ce qui nécessite d’intégrer plusieurs fonctionnalités de gestion des quarts de travail et de bénévoles.</p>
 <h3 id="proposition-et-objectifs">Proposition et objectifs<a class="headerlink" href="#proposition-et-objectifs" title="Permanent link">&para;</a></h3>
+<p>Un projet de cette ampleur dépasse ce qu’une seule personne peut réaliser en une session alors ce projet sera davantage un produit minimum viable qu’un produit fini. Côté client, j’utiliserai React Native avec Expo pour créer une application Android et iOS. Côté serveur, ce serait Node.js, Express.js et PostgreSQL. La maquette sera réalisée avec Figma.</p>
+<p>Les organisations devraient pouvoir: créer un compte et profil, gérer les quarts, approuver/retirer des bénévoles d’un quart, faire le check-in/out des bénévoles via code QR et sélection manuelle, et créer un formulaire pour un quart.</p>
+<p>Les bénévoles devrait pouvoir: créer un compte, voirs leurs quarts, rechercher des organisations, rechercher et filtrer des quarts disponibles, s’inscrire/désinscrire des quarts, remplir un formulaire de quart, faire un check-in/out par code QR, se connecter à d’autres bénévoles par code QR, voir les quarts auxquels leurs contacts sont inscrits et consulter leurs propres statistiques de bénévolat.</p>
 <h2 id="echeancier">Échéancier<a class="headerlink" href="#echeancier" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -793,27 +802,21 @@
 <tbody>
 <tr>
 <td>Ouverture de projet</td>
-<td>1 septembre</td>
+<td>23 septembre</td>
 <td>Proposition de projet</td>
 <td>✅ Terminé</td>
 </tr>
 <tr>
-<td>Analyse des exigences</td>
-<td>16 septembre</td>
-<td>Document d'analyse</td>
-<td>🔄 En cours</td>
-</tr>
-<tr>
-<td>Prototype 1</td>
-<td>23 septembre</td>
-<td>Maquette + Flux d'activités</td>
-<td>⏳ À venir</td>
-</tr>
-<tr>
-<td>Prototype 2</td>
+<td>Vérification de nouveauté</td>
 <td>30 septembre</td>
-<td>Prototype finale + Flux</td>
-<td>⏳ À venir</td>
+<td>Document de services existants</td>
+<td>✅ Terminé</td>
+</tr>
+<tr>
+<td>Analyse des exigences</td>
+<td>30 septembre</td>
+<td>Liste des exigences</td>
+<td>✅ Terminé</td>
 </tr>
 <tr>
 <td>Architecture</td>
@@ -824,13 +827,13 @@
 <tr>
 <td>Modèle de donneés</td>
 <td>6 octobre</td>
-<td>Diagramme UML ou entité-association</td>
-<td>⏳ À venir</td>
+<td>Maquette + diagramme de données</td>
+<td>🔄 En cours</td>
 </tr>
 <tr>
-<td>Revue de conception</td>
+<td>Conception</td>
 <td>6 octobre</td>
-<td>Feedback encadrant + ajustements</td>
+<td>Maquette Figma</td>
 <td>⏳ À venir</td>
 </tr>
 <tr>
@@ -847,14 +850,14 @@
 </tr>
 <tr>
 <td>Implémentation v3</td>
-<td>1er décembre</td>
-<td>Version finale</td>
+<td>1 décembre</td>
+<td>Version avec toute les fonctionalités</td>
 <td>⏳ À venir</td>
 </tr>
 <tr>
-<td>Tests</td>
-<td>11-31 novembre</td>
-<td>Plan + Résultats intermédiaires</td>
+<td>Création de serveur</td>
+<td>8 décembre</td>
+<td>Version qui roule dans le nuage</td>
 <td>⏳ À venir</td>
 </tr>
 <tr>
