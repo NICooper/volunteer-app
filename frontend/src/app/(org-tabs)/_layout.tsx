@@ -1,53 +1,51 @@
-import { TabNavigator, Tab } from '@/src/components/tab-navigator';
+import React from 'react';
+import { Tabs } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import IndexScreen from './index';
-import ShiftsScreen from './shifts';
-import VolunteersScreen from './volunteers';
-import ProfileScreen from './profile';
+import { PaperExpoNavBar } from '@/src/components/paper-expo-nav-bar';
 
-export default function OrgTabLayout() {
+export default function OrgTabsLayout() {
   return (
-    <TabNavigator>
-      <Tab.Screen
-        name="Activities"
-        component={IndexScreen}
+    <Tabs
+      tabBar={(props) => <PaperExpoNavBar {...props} />}
+      screenOptions={{ headerShown: false }}
+    >
+      <Tabs.Screen
+        name='(activities)'
+
         options={{
+          title: 'Activities',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
+            <MaterialCommunityIcons name='star-circle' color={color} size={26} />
           ),
-          headerShown: false
         }}
       />
-      <Tab.Screen
-        name="Shifts"
-        component={ShiftsScreen}
+      <Tabs.Screen
+        name='(shifts)'
         options={{
+          title: 'Shifts',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="cog" color={color} size={26} />
+            <MaterialCommunityIcons name='calendar' color={color} size={26} />
           ),
-          headerShown: false
         }}
       />
-      <Tab.Screen
-        name="Volunteers"
-        component={VolunteersScreen}
+      <Tabs.Screen
+        name='volunteers'
         options={{
+          title: 'Volunteers',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="cog" color={color} size={26} />
+            <MaterialCommunityIcons name='account-group' color={color} size={26} />
           ),
-          headerShown: false
         }}
       />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+      <Tabs.Screen
+        name='profile'
         options={{
+          title: 'Profile',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="cog" color={color} size={26} />
+            < MaterialCommunityIcons name='account' color={color} size={26} />
           ),
-          headerShown: false
         }}
       />
-    </TabNavigator>
+    </Tabs>
   );
 }

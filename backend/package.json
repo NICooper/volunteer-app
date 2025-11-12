@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "build": "tsc",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' ./bin/www"
+    "dev": "nodemon --watch 'src/**/*.ts' --ext 'js,mjs,cjs,json,ts,html,css' --exec 'ts-node' ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

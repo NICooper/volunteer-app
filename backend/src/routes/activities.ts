@@ -1,8 +1,12 @@
 import { Router } from 'express';
-import { getActivities, getActivitiesByOrg } from '../controllers/activities';
+import { createActivity, getActivities, getActivity, updateActivity } from '../controllers/activities';
 
 export const activitiesRouter = Router();
 
 activitiesRouter.get('', getActivities);
 
-activitiesRouter.get('/:orgId', getActivitiesByOrg);
+activitiesRouter.post('', createActivity);
+
+activitiesRouter.get('/:id', getActivity);
+
+activitiesRouter.put('/:id', updateActivity);

@@ -1,19 +1,31 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Activity } from '@shared/db/schema-types';
 import { StyleSheet } from 'react-native';
-import { Card, Text } from 'react-native-paper';
+import { Card } from 'react-native-paper';
+import { format } from 'date-fns';
 
+export default function ActivityCard(
+  { activity, onPress }: { activity: Activity, onPress: () => void }
+) {
+  let datesString;
+  if (activity.startTime) {
+    datesString = 'From ' + format(activity.startTime, 'PP');
+    
+    if (activity.endTime) {
+      datesString += '\n' + 'To ' + format(activity.endTime, 'PP');
+    }
+  }
 
-export default function ActivityCard({ props }: { props: any }) {
   return (
-    <Card mode='outlined' style={styles.card}>
+    <Card mode='outlined' style={styles.card} onPress={onPress}>
       <Card.Title
-        title={props.title}
-        subtitle={props.startDate + '\n' + props.endDate}
+        title={activity.name}
+        subtitle={datesString}
         subtitleNumberOfLines={2}
         titleVariant='titleMedium'
         style={styles.content}
         subtitleVariant='bodySmall'
-        right={() => <MaterialCommunityIcons name="play" size={16} style={styles.arrow} />}
+        right={() => <MaterialCommunityIcons name='play' size={16} style={styles.arrow} />}
       />
     </Card>
   );
@@ -22,7 +34,7 @@ export default function ActivityCard({ props }: { props: any }) {
 const styles = StyleSheet.create({
   card: {
     marginVertical: 4,
-    marginHorizontal: 16
+    marginHorizontal: 0
   },
   content: {
     marginVertical: 8

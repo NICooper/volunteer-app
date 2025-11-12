@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS shifts (
   description VARCHAR(2000),
   num_openings INT NOT NULL,
   require_approval BOOLEAN DEFAULT FALSE,
+  is_cancelled BOOLEAN DEFAULT FALSE,
   questionnaire_json JSONB,
   FOREIGN KEY (activity_id) REFERENCES activities(activity_id) ON DELETE CASCADE
 );
@@ -60,7 +61,7 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TABLE IF NOT EXISTS shift_volunteers (
   user_id INT NOT NULL,
   shift_id INT NOT NULL,
-  is_approved BOOLEAN,
+  is_approved BOOLEAN DEFAULT FALSE,
   form_json JSONB,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP,
@@ -76,7 +77,7 @@ CREATE TABLE IF NOT EXISTS worked_events (
   checked_out_at TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE,
-  UNIQUE (user_id, event_id)
+  PRIMARY KEY (user_id, event_id)
 );
 
 CREATE TABLE IF NOT EXISTS user_connections (

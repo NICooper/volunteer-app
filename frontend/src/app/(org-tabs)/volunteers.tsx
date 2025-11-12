@@ -10,15 +10,15 @@ export default function VolunteersScreen() {
         <List.Subheader>
           <Text variant='titleLarge'>Current Activities</Text>
         </List.Subheader>
-        <VolunteerCard props={{ name: "John Doe", shiftCount: 3 }} />
-        <VolunteerCard props={{ name: "Jane Smith", shiftCount: 5 }} />
+        <VolunteerCard props={{ name: 'John Doe', shiftCount: 3 }} />
+        <VolunteerCard props={{ name: 'Jane Smith', shiftCount: 5 }} />
       </List.Section>
       <List.Section>
         <List.Subheader>
           <Text variant='titleLarge'>Past Activities</Text>
         </List.Subheader>
-        <VolunteerCard props={{ name: "John Doe", shiftCount: 3 }} />
-        <VolunteerCard props={{ name: "Jane Smith", shiftCount: 5 }} />
+        <VolunteerCard props={{ name: 'John Doe', shiftCount: 3 }} />
+        <VolunteerCard props={{ name: 'Jane Smith', shiftCount: 5 }} />
       </List.Section>
     </BodyContainer>
   );

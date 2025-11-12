@@ -1,49 +1,49 @@
-import { TabNavigator, Tab } from '@/src/components/tab-navigator';
+import { PaperExpoNavBar } from '@/src/components/paper-expo-nav-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import IndexScreen from './index';
-import SearchScreen from './search';
-import CommunityScreen from './community';
-import ProfileScreen from './profile';
+import { Tabs } from 'expo-router';
 
 export default function VolunteerTabLayout() {
   return (
-    <TabNavigator>
-      <Tab.Screen
-        name="Suggested"
-        component={IndexScreen}
+    <Tabs
+      tabBar={(props) => <PaperExpoNavBar {...props} />}
+      screenOptions={{ headerShown: false }}
+    >
+      <Tabs.Screen
+        name='index'
         options={{
+          title: 'Suggested',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
+            <MaterialCommunityIcons name='home' color={color} size={26} />
           ),
         }}
       />
-      <Tab.Screen
-        name="Search"
-        component={SearchScreen}
+      <Tabs.Screen
+        name='search'
         options={{
+          title: 'Search',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="cog" color={color} size={26} />
+            <MaterialCommunityIcons name='cog' color={color} size={26} />
           ),
         }}
       />
-      <Tab.Screen
-        name="Community"
-        component={CommunityScreen}
+      <Tabs.Screen
+        name='community'
         options={{
+          title: 'Community',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="cog" color={color} size={26} />
+            <MaterialCommunityIcons name='cog' color={color} size={26} />
           ),
         }}
       />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+      <Tabs.Screen
+        name='profile'
         options={{
+          title: 'Profile',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="cog" color={color} size={26} />
+            <MaterialCommunityIcons name='cog' color={color} size={26} />
           ),
         }}
       />
-    </TabNavigator>
+    </Tabs>
   );
 }
