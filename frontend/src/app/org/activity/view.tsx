@@ -79,7 +79,7 @@ export default function ActivityViewScreen() {
           ))}
         </ListAccordion>}
       </ScrollView>
-      <ThumbFAB icon='plus' label='Create Shift' onPress={() => router.navigate({ pathname: '/org/shift/edit' })} />
+      <ThumbFAB icon='plus' label='Create Shift' onPress={() => router.navigate({ pathname: '/org/shift/edit', params: { activityId } })} />
     </>
   );
 }

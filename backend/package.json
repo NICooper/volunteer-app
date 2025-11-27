@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
+    "date-fns": "^4.1.0",
     "debug": "~4.4.3",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",

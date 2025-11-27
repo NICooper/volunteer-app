@@ -13,8 +13,9 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS organisations (
   id INT PRIMARY KEY REFERENCES accounts,
   name VARCHAR(255) NOT NULL UNIQUE,
+  description VARCHAR(2000),
   profile_photo_url VARCHAR(255),
-  address VARCHAR(255),
+  address VARCHAR(255) NOT NULL,
   website VARCHAR(255),
   org_level_approval BOOLEAN DEFAULT FALSE
 );
@@ -41,9 +42,12 @@ CREATE TABLE IF NOT EXISTS shifts (
   activity_id INT NOT NULL,
   name VARCHAR(255) NOT NULL,
   description VARCHAR(2000),
+  location VARCHAR(255),
   num_openings INT NOT NULL,
   require_approval BOOLEAN DEFAULT FALSE,
+  is_closed BOOLEAN DEFAULT FALSE,
   is_cancelled BOOLEAN DEFAULT FALSE,
+  is_template BOOLEAN DEFAULT FALSE,
   questionnaire_json JSONB,
   FOREIGN KEY (activity_id) REFERENCES activities(activity_id) ON DELETE CASCADE
 );
@@ -61,7 +65,7 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TABLE IF NOT EXISTS shift_volunteers (
   user_id INT NOT NULL,
   shift_id INT NOT NULL,
-  is_approved BOOLEAN DEFAULT FALSE,
+  status TEXT CHECK (status IN ('pending', 'approved', 'rejected', 'withdrawn')) NOT NULL,
   form_json JSONB,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP,
@@ -73,10 +77,14 @@ CREATE TABLE IF NOT EXISTS shift_volunteers (
 CREATE TABLE IF NOT EXISTS worked_events (
   user_id INT NOT NULL,
   event_id INT NOT NULL,
-  checked_in_at TIMESTAMP,
+  checked_in_by INT NOT NULL,
+  checked_out_by INT,
+  checked_in_at TIMESTAMP NOT NULL,
   checked_out_at TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE,
+  FOREIGN KEY (checked_in_by) REFERENCES accounts(id) ON DELETE SET NULL,
+  FOREIGN KEY (checked_out_by) REFERENCES accounts(id) ON DELETE SET NULL,
   PRIMARY KEY (user_id, event_id)
 );
 
@@ -101,7 +109,7 @@ CREATE TABLE IF NOT EXISTS follows (
 CREATE TABLE IF NOT EXISTS org_volunteers (
   user_id INT NOT NULL,
   org_id INT NOT NULL,
-  is_approved BOOLEAN,
+  status TEXT CHECK (status IN ('pending', 'approved', 'rejected', 'withdrawn')) NOT NULL,
   created_at TIMESTAMP NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (org_id) REFERENCES organisations(id) ON DELETE CASCADE,
@@ -131,7 +139,9 @@ CREATE TABLE IF NOT EXISTS shift_categories (
 );
 
 CREATE TABLE IF NOT EXISTS qr_codes (
-  code VARCHAR(20) NOT NULL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  generated_by INT NOT NULL,
   data JSONB NOT NULL,
-  expires_at TIMESTAMP NOT NULL
+  expires_at TIMESTAMP NOT NULL,
+  FOREIGN KEY (generated_by) REFERENCES accounts(id) ON DELETE CASCADE
 );

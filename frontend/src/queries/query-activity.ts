@@ -1,7 +1,8 @@
 import { Activity, InsertActivity } from '@shared/db/schema-types';
+import { apiUrl } from '../global';
 
 export async function fetchActivities(orgId: number): Promise<Activity[]> {
-  const response = await fetch(`http://localhost:3000/activities?orgId=${orgId}`);
+  const response = await fetch(`${apiUrl}/activities?orgId=${orgId}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
@@ -16,7 +17,7 @@ export async function fetchActivities(orgId: number): Promise<Activity[]> {
 }
 
 export async function fetchActivity(activityId: number): Promise<Activity> {
-  const response = await fetch(`http://localhost:3000/activities/${activityId}`);
+  const response = await fetch(`${apiUrl}/activities/${activityId}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
@@ -31,15 +32,17 @@ export async function fetchActivity(activityId: number): Promise<Activity> {
 export async function createOrUpdateActivity(activity: InsertActivity) {
   const isCreateMode = !activity.activityId;
 
-  const response = await fetch(`http://localhost:3000/activities${isCreateMode ? '' : `/${activity.activityId}`}`, {
-    method: isCreateMode ? 'POST' : 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(activity)
-  });
+  const response = await fetch(
+    `${apiUrl}/activities${isCreateMode ? '' : `/${activity.activityId}`}`, {
+      method: isCreateMode ? 'POST' : 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(activity)
+    }
+  );
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
   return response.json();
-};
+}

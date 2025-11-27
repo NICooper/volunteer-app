@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import { getShiftVolunteers } from '../controllers/shift-volunteers';
+import { createShiftVolunteer, getShiftVolunteer, getShiftVolunteers, updateShiftVolunteer } from '../controllers/shift-volunteers';
 
 export const shiftVolunteersRouter = Router();
 
 shiftVolunteersRouter.get('', getShiftVolunteers);
 
-// shiftVolunteersRouter.get('/:id', getShiftVolunteer);
+shiftVolunteersRouter.get('/:shiftId/:userId', getShiftVolunteer);
 
-// shiftVolunteersRouter.put('/:id', updateActivity);
+shiftVolunteersRouter.post('/:shiftId/:userId', createShiftVolunteer);
+
+shiftVolunteersRouter.put('/:shiftId/:userId', updateShiftVolunteer);

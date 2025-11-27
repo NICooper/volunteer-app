@@ -1,21 +1,25 @@
 import ThumbFAB from '@/src/components/thumb-fab';
 import ActivityCard from '@/src/components/org/activity-card';
 import { StyleSheet, View } from 'react-native';
-import { List, Text } from 'react-native-paper';
+import { List, Text, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { fetchActivities } from '@/src/queries/query-activity';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isEntirelyBeforeToday } from '@/src/utilities/period-filters';
+import { UserContext } from '../../_layout';
+import React from 'react';
 
 export default function ActivitiesScreen() {
   const router = useRouter();
+  const { user } = React.useContext(UserContext);
   const insets = useSafeAreaInsets();
+  const theme = useTheme();
 
   const { data } = useQuery({
     queryKey: ['activities'],
-    queryFn: () => fetchActivities(1), // TODO
+    queryFn: () => fetchActivities(user?.id!),
     staleTime: 60 * 1000
   });
 

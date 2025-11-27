@@ -13,7 +13,7 @@ export default function VolunteerCard({ shiftVolunteer, onPress }: { shiftVolunt
         titleVariant='titleMedium'
         style={styles.content}
         subtitleVariant='bodySmall'
-        left={() => <Avatar.Text label={shiftVolunteer.username.charAt(0)} size={48} />}
+        left={() => <Avatar.Text label={shiftVolunteer.username.charAt(0).toLocaleUpperCase()} size={48} />}
         right={() => <MaterialCommunityIcons name='play' size={16} style={styles.arrow} />}
       />
     </Card>
@@ -23,7 +23,7 @@ export default function VolunteerCard({ shiftVolunteer, onPress }: { shiftVolunt
 const styles = StyleSheet.create({
   card: {
     marginVertical: 4,
-    marginHorizontal: 16
+    marginHorizontal: 0
   },
   content: {
     marginVertical: 4

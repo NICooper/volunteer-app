@@ -1,18 +1,16 @@
 import { ShiftVolunteerGeneral } from '@shared/db/schema-types';
+import { apiUrl } from '../global';
 
-export async function fetchShiftVolunteers({ shiftId, orgId }: {shiftId: number, orgId: number}): Promise<ShiftVolunteerGeneral[]> {
+export async function fetchVolunteers({ orgId }: {orgId: number}): Promise<ShiftVolunteerGeneral[]> {
 
   const queryArray = [];
   if (orgId) {
     queryArray.push(`orgId=${orgId}`);
   }
-  if (shiftId) {
-    queryArray.push(`shiftId=${shiftId}`);
-  }
 
   const query = queryArray.length > 0 ? `?${queryArray.join('&')}` : '';
 
-  const response = await fetch(`http://localhost:3000/shiftVolunteers${query}`);
+  const response = await fetch(`${apiUrl}/volunteers${query}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }

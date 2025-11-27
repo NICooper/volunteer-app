@@ -1,5 +1,5 @@
-import { Activity, ShiftVolunteer } from '@shared/db/schema-types';
-import { eq, sql, SQL } from 'drizzle-orm';
+import { Activity, InsertShiftVolunteer, ShiftVolunteer } from '@shared/db/schema-types';
+import { and, eq, sql, SQL } from 'drizzle-orm';
 import { activities, shifts, shiftVolunteers, users } from '../db/schema';
 import { db } from '../db/setup';
 
@@ -28,5 +28,49 @@ export const ShiftVolunteerModel = {
       .where(eq(shiftVolunteers.shiftId, shiftVolunteersParams.shiftId));
     
     return shiftVolunteersQuery;
+  },
+
+  getShiftVolunteer: async (shiftVolunteerParams: Pick<ShiftVolunteer, 'shiftId' | 'userId'>) => {
+    const filters: SQL[] = [];
+    
+    filters.push(eq(shiftVolunteers.shiftId, shiftVolunteerParams.shiftId));
+    filters.push(eq(shiftVolunteers.userId, shiftVolunteerParams.userId));
+
+    const shiftVolunteer = await db.select({
+        userId: shiftVolunteers.userId,
+        shiftId: shiftVolunteers.shiftId,
+        isApproved: shiftVolunteers.isApproved
+      })
+      .from(shiftVolunteers)
+      .where(and(...filters))
+      .limit(1);
+
+    return shiftVolunteer.length > 0 ? shiftVolunteer[0] : undefined;
+  },
+
+  createShiftVolunteer: async (shiftVolunteerData: InsertShiftVolunteer) => {
+    const newShiftVolunteer = await db.transaction(async (tx) => {
+      const [shift] = await db.select().from(shifts).where(eq(shifts.shiftId, shiftVolunteerData.shiftId)).limit(1);
+
+      shiftVolunteerData.isApproved = !shift.requireApproval;
+
+      const [sv] = await tx.insert(shiftVolunteers)
+        .values(shiftVolunteerData)
+        .returning();
+      return sv;
+    });
+    return newShiftVolunteer;
+  },
+
+  updateShiftVolunteer: async (shiftVolunteerData: Pick<ShiftVolunteer, 'shiftId' | 'userId'> & Partial<Omit<ShiftVolunteer, 'shiftId' | 'userId'>>) => {
+    const [updatedShiftVolunteer] = await db.update(shiftVolunteers)
+      .set(shiftVolunteerData)
+      .where(and(
+        eq(shiftVolunteers.shiftId, shiftVolunteerData.shiftId),
+        eq(shiftVolunteers.userId, shiftVolunteerData.userId)
+      ))
+      .returning();
+    return updatedShiftVolunteer;
   }
+
 };

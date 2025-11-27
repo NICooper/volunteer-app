@@ -1,35 +1,34 @@
 import ShiftCard from '@/src/components/org/shift-card';
 import { ScrollView, StyleSheet } from 'react-native';
 import ListAccordion from '@/src/components/list-accordion';
-import { Text } from 'react-native-paper';
+import { Text, useTheme } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQuery } from '@tanstack/react-query';
 import { fetchFullShifts } from '@/src/queries/query-shift';
-import { isEntirelyAfterToday, isEntirelyBeforeToday } from '@/src/utilities/period-filters';
+import { isEntirelyAfterToday, isEntirelyBeforeToday, isSometimeToday } from '@/src/utilities/period-filters';
+import { UserContext } from '../../_layout';
+import React from 'react';
 
 export default function ShiftsScreen() {
+  const { user } = React.useContext(UserContext);
   const insets = useSafeAreaInsets();
+  const theme = useTheme();
 
   const { data } = useQuery({
     queryKey: ['shifts'],
-    queryFn: () => fetchFullShifts({ orgId: 1}), // TODO
+    queryFn: () => fetchFullShifts({ orgId: user?.id!}),
     staleTime: 60 * 1000
   });
 
   const shifts = data || [];
 
-  const todayShifts = shifts.filter(shift => 
-    !isEntirelyAfterToday(shift.startTime) && !isEntirelyBeforeToday(shift.endTime)
-  );
-
+  const todayShifts = shifts.filter(shift => isSometimeToday(shift.startTime, shift.endTime));
   const upcomingShifts = shifts.filter(shift => isEntirelyAfterToday(shift.startTime));
-
   const pastShifts = shifts.filter(shift => isEntirelyBeforeToday(shift.endTime));
 
-
   return (
-    <ScrollView style={{ paddingTop: insets.top }}>
+    <ScrollView style={{ paddingTop: insets.top, backgroundColor: theme.colors.background }}>
       <ListAccordion title="Today's Shifts" expanded={true} style={styles.list}>
         { todayShifts.length === 0
           ? <Text style={styles.emptyText}>There are no shifts today.</Text>
@@ -66,6 +65,8 @@ const styles = StyleSheet.create({
 
   },
   emptyText: {
-    padding: 16
+    paddingHorizontal: 28,
+    paddingTop: 6,
+    paddingBottom: 28,
   }
 });

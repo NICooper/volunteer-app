@@ -2,12 +2,15 @@ import React from 'react';
 import { Tabs } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { PaperExpoNavBar } from '@/src/components/paper-expo-nav-bar';
+import { useTheme } from 'react-native-paper';
 
 export default function OrgTabsLayout() {
+  const theme = useTheme();
+
   return (
     <Tabs
       tabBar={(props) => <PaperExpoNavBar {...props} />}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: theme.colors.background } }}
     >
       <Tabs.Screen
         name='(activities)'
@@ -29,7 +32,7 @@ export default function OrgTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name='volunteers'
+        name='(volunteers)'
         options={{
           title: 'Volunteers',
           tabBarIcon: ({ color }) => (
@@ -38,7 +41,7 @@ export default function OrgTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name='profile'
+        name='(profile)'
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => (

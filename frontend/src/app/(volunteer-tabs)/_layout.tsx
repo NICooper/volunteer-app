@@ -1,46 +1,48 @@
-import { PaperExpoNavBar } from '@/src/components/paper-expo-nav-bar';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React from 'react';
 import { Tabs } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { PaperExpoNavBar } from '@/src/components/paper-expo-nav-bar';
 
-export default function VolunteerTabLayout() {
+export default function OrgTabsLayout() {
   return (
     <Tabs
       tabBar={(props) => <PaperExpoNavBar {...props} />}
       screenOptions={{ headerShown: false }}
     >
       <Tabs.Screen
-        name='index'
+        name='(suggestions)'
+
         options={{
-          title: 'Suggested',
+          title: 'Suggestions',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name='home' color={color} size={26} />
+            <MaterialCommunityIcons name='star-circle' color={color} size={26} />
           ),
         }}
       />
       <Tabs.Screen
-        name='search'
+        name='(search)'
         options={{
           title: 'Search',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name='cog' color={color} size={26} />
+            <MaterialCommunityIcons name='magnify' color={color} size={26} />
           ),
         }}
       />
       <Tabs.Screen
-        name='community'
+        name='(community)'
         options={{
           title: 'Community',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name='cog' color={color} size={26} />
+            <MaterialCommunityIcons name='account-group' color={color} size={26} />
           ),
         }}
       />
       <Tabs.Screen
-        name='profile'
+        name='(profile)'
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name='cog' color={color} size={26} />
+            < MaterialCommunityIcons name='account' color={color} size={26} />
           ),
         }}
       />

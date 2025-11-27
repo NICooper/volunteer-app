@@ -4,24 +4,22 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createOrUpdateActivity, fetchActivity } from '@/src/queries/query-activity';
 import { Activity, InsertActivity } from '@shared/db/schema-types';
-import { DatePickerInput } from 'react-native-paper-dates';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GlobalSnackbarContext } from '@/src/components/global-snackbar';
+import { UserContext } from '../../_layout';
+import SingleDatePickerInput from '@/src/components/paper-single-date-input';
+import { startOfToday } from 'date-fns';
 
 export default function ActivityEditScreen() {
   const queryClient = useQueryClient();
+  const { user } = React.useContext(UserContext);
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
-  const today = new Date();
-
   const { setSnackbarMessage } = React.useContext(GlobalSnackbarContext);
-  const [name, setName] = React.useState<string>();
-  const [description, setDescription] = React.useState<string>();
-  const [startDate, setStartDate] = React.useState<Date>();
-  const [endDate, setEndDate] = React.useState<Date | undefined>();
+  const [activity, setActivity] = React.useState<InsertActivity>({ name: '', orgId: user?.id! });
 
   const params = useLocalSearchParams<{ activityId?: string }>();
   const activityId = params.activityId ? parseInt(params.activityId) : undefined;
@@ -32,14 +30,18 @@ export default function ActivityEditScreen() {
     queryKey: ['activity', activityId],
     queryFn: () => fetchActivity(activityId!),
     staleTime: Infinity,
-    enabled: !isCreateMode
+    enabled: !isCreateMode,
   });
 
-  const activity =  activityQuery.data;
+  React.useEffect(() => {
+    if (activityQuery.isSuccess && activityQuery.data) {
+      setActivity(activityQuery.data);
+    }
+  }, [activityQuery.data]);
 
   const activityMutation = useMutation({
     mutationFn: (activity: InsertActivity) => createOrUpdateActivity(activity),
-    onSuccess: (savedActivity: Activity) => {
+    onSuccess: (_: Activity) => {
       queryClient.invalidateQueries({ queryKey: ['activities'] });
       queryClient.invalidateQueries({ queryKey: ['activity', activityId] });
       setSnackbarMessage('Activity saved');
@@ -50,22 +52,7 @@ export default function ActivityEditScreen() {
     }
   });
 
-  if (activity) {
-    if (name === undefined) {
-      setName(activity.name);
-    }
-    if (description === undefined) {
-      setDescription(activity.description || undefined);
-    }
-    if (startDate === undefined && activity.startTime) {
-      setStartDate(activity.startTime);
-    }
-    if (endDate === undefined && activity.endTime) {
-      setEndDate(activity.endTime);
-    }
-  }
-
-  const isFormComplete = name && name.trim().length > 0 && startDate;
+  const isFormComplete = activity?.name && activity.name.trim().length > 0 && activity.startTime;
 
   return (
     <>
@@ -73,56 +60,32 @@ export default function ActivityEditScreen() {
         <Appbar.BackAction onPress={router.back} />
         <Appbar.Content title={`${isCreateMode ? 'Create Activity' : 'Edit Activity'}`} />
         <Appbar.Action icon='content-save' disabled={!isFormComplete} color={theme.colors.primary} 
-          onPress={() => 
-            activityMutation.mutate({
-              activityId,
-              name: name!.trim(),
-              description: description?.trim() || '',
-              startTime: startDate!,
-              endTime: endDate || null,
-              orgId: 1 // TODO
-            })
-          }
+          onPress={() => activityMutation.mutate({...activity, activityId}) }
         />
       </Appbar.Header>
       <ScrollView style={[styles.body, { paddingBottom: insets.bottom }]}>
-        <TextInput label='Activity Name' mode='outlined' style={styles.input} defaultValue={activity?.name ?? ''} onChangeText={t => setName(t)}/>
-        <TextInput label='Activity Description' mode='outlined' multiline={true} numberOfLines={6} style={styles.input} defaultValue={activity?.description ?? ''} onChangeText={t => setDescription(t)} />
-        <View style={[styles.datePickerInputWrapper, styles.input]}>
-          <DatePickerInput
-            locale='en'
-            label='Start Date'
-            mode='outlined'
-            validRange={{startDate: today, endDate}}
-            value={startDate}
-            onEndEditing={(e) => {
-              const text = e.nativeEvent.text;
-              if (text.length < 10) {
-                setStartDate(undefined);
-                return;
-              }
-            }}
-            onChange={(d: Date | undefined) => setStartDate(d ?? today)}
-            inputMode='start'
+        <TextInput label='Activity Name' mode='outlined' style={styles.input} value={activity?.name ?? ''} onChangeText={t => setActivity({...activity, name: t})}/>
+        <TextInput label='Activity Description' mode='outlined' multiline={true} numberOfLines={6} style={styles.input} value={activity?.description ?? ''} onChangeText={t => setActivity({...activity, description: t})} />
+        <View style={[styles.dateInputWrapper, styles.input]}>
+          {/* <PaperDateTimeInput
+            value={activity?.startTime ?? undefined}
+            onChange={(date) => setActivity({...activity, startTime: date})}
+            singleDatePickerInputProps={{ textInputProps: { label: 'Start Date' }, datePickerProps: { locale: 'en', validRange: {startDate: startOfToday(), endDate: activity.endTime ?? undefined} } }}
+            timePickerInputProps={{ textInputProps: { label: 'Start Time' }, timePickerProps: { locale: 'en' } }}
+          /> */}
+          <SingleDatePickerInput
+            textInputProps={{ label: 'Start Date' }}
+            datePickerProps={{ locale: 'en', validRange: {startDate: startOfToday(), endDate: activity.endTime ?? undefined} }}
+            value={activity.startTime ?? undefined}
+            onChange={(d: Date | undefined) => setActivity({...activity, startTime: d ?? startOfToday()})}
           />
         </View>
-        <View style={[styles.datePickerInputWrapper, styles.input]}>
-          <DatePickerInput
-            locale='en'
-            label='End Date (optional)'
-            mode='outlined'
-            validRange={{startDate}}
-            value={endDate}
-            disabled={!startDate}
-            onEndEditing={(e) => {
-              const text = e.nativeEvent.text;
-              if (text.length < 10) {
-                setEndDate(undefined);
-                return;
-              }
-            }}
-            onChange={(d: Date | undefined) => setEndDate(d)}
-            inputMode='start'
+        <View style={[styles.dateInputWrapper, styles.input]}>
+          <SingleDatePickerInput
+            textInputProps={{ label: 'End Date (optional)', disabled: !activity.startTime }}
+            datePickerProps={{ locale: 'en', validRange: {startDate: activity.startTime ?? undefined} }}
+            value={activity.endTime ?? undefined}
+            onChange={(d: Date | undefined) => setActivity({...activity, endTime: d ?? startOfToday()})}
           />
         </View>
       </ScrollView>
@@ -134,7 +97,7 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 16
   },
-  datePickerInputWrapper: {
+  dateInputWrapper: {
     height: 60
   },
   input: {

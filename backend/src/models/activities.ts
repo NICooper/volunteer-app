@@ -18,9 +18,11 @@ export const ActivityModel = {
   },
 
   getActivity: async (activityId: number) => {
-    return db.select()
+    const activity = await db.select()
       .from(activities)
-      .where(eq(activities.activityId, activityId));
+      .where(eq(activities.activityId, activityId))
+      .limit(1);
+    return activity.length > 0 ? activity[0] : undefined;
   },
 
   createActivity: async (activityData: InsertActivity) => {

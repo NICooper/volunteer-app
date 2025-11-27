@@ -1,13 +1,12 @@
 import { Stack } from 'expo-router';
-import { Text } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 
 export default function ActivityLayout() {
+  const theme = useTheme();
+
   return (
-    // <>
-      /* <Text>Activity Layout</Text> */
-      <Stack>
-        <Stack.Screen name='index' options={{ headerShown: false}} />
-      </Stack>
-    // </>
+    <Stack screenOptions={{ contentStyle: { backgroundColor: theme.colors.background }}}>
+      <Stack.Screen name='index' options={{ headerShown: false}} />
+    </Stack>
   );
 }

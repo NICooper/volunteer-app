@@ -1,7 +1,6 @@
-import { table } from 'console';
-import { create } from 'domain';
-import { primaryKey } from 'drizzle-orm/pg-core';
-import { pgTable, serial, text, varchar, integer, timestamp, boolean, jsonb } from 'drizzle-orm/pg-core';
+import { QrJson } from '@shared/db/schema-types';
+import { generateKey } from 'crypto';
+import { pgTable, primaryKey, uuid, serial, text, varchar, integer, timestamp, boolean, jsonb } from 'drizzle-orm/pg-core';
 
 export const accounts = pgTable('accounts', {
   id: integer('id').primaryKey(),
@@ -14,9 +13,10 @@ export const users = pgTable('users', {
   username: varchar('username', { length: 255 }).notNull().unique()
 });
 
-export const organizations = pgTable('organizations', {
+export const organizations = pgTable('organisations', {
   id: integer('id').primaryKey().references(() => accounts.id),
-  name: varchar('name', { length: 255 }).notNull(),
+  name: varchar('name', { length: 255 }).notNull().unique(),
+  profilePhotoUrl: varchar('profile_photo_url', { length: 255 }),
   address: varchar('address', { length: 255 }),
   website: varchar('website', { length: 255 }),
   orgLevelApproval: boolean('org_level_approval').notNull().default(false)
@@ -64,8 +64,21 @@ export const shiftVolunteers = pgTable('shift_volunteers', {
 export const workedEvents = pgTable('worked_events', {
   userId: integer('user_id').notNull().references(() => users.id),
   eventId: integer('event_id').notNull().references(() => events.eventId),
-  checkInAt: timestamp('check_in_at'),
-  checkOutAt: timestamp('check_out_at')
+  checkedInBy: integer('checked_in_by').notNull().references(() => accounts.id),
+  checkedOutBy: integer('checked_out_by').references(() => accounts.id),
+  checkedInAt: timestamp('checked_in_at').notNull(),
+  checkedOutAt: timestamp('checked_out_at')
 }, (table) => [
   primaryKey({ columns: [table.userId, table.eventId] })
 ]);
+
+export const qrCodes = pgTable('qr_codes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  generatedBy: integer('generated_by').notNull().references(() => accounts.id),
+  data: jsonb('data').notNull().$type<QrJson>(),
+  expiresAt: timestamp('expires_at').notNull()
+});
+
+export const test = pgTable('test', {
+  id: uuid('id').primaryKey().defaultRandom()
+});
