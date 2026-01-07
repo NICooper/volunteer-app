@@ -39,8 +39,9 @@ export async function createShift(req: Request, res: Response, next: NextFunctio
     shiftData.event.startTime = new Date(shiftData.event.startTime);
     shiftData.event.endTime = new Date(shiftData.event.endTime);
     await ShiftModel.createShift(shiftData);
-
-    res.status(201);
+    
+    res.status(201).json({});
+    console.log('Shift created successfully');
   } catch (err) {
     next(err);
   }
@@ -53,7 +54,7 @@ export async function updateShift(req: Request, res: Response, next: NextFunctio
     shiftData.event.endTime = new Date(shiftData.event.endTime);
     await ShiftModel.updateShift(shiftData);
 
-    res.status(200);
+    res.status(200).json({});
   } catch (err) {
     next(err);
   }

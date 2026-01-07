@@ -1,11 +1,19 @@
 import { NextFunction, Request, Response } from 'express';
 import { ActivityModel } from '../models/activities';
 import { Activity, InsertActivity } from '@shared/db/schema-types';
+import { User } from '../types/user';
 
 export async function getActivities(req: Request, res: Response, next: NextFunction) {
   try {
+    const user = req.user as User;
+    const queryOrgId = req.query.orgId ? parseInt(req.query.orgId as string) : undefined;
+
+    if (queryOrgId !== user.id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
     const activityQuery = {
-      orgId: req.query.orgId ? parseInt(req.query.orgId as string) : undefined
+      orgId: queryOrgId
     };
 
     const activities = await ActivityModel.getActivities(activityQuery);
@@ -17,9 +25,14 @@ export async function getActivities(req: Request, res: Response, next: NextFunct
 
 export async function getActivity(req: Request, res: Response, next: NextFunction) {
   try {
+    const user = req.user as User;
     const activityId = parseInt(req.params.id);
 
     const activity = await ActivityModel.getActivity(activityId);
+
+    if (activity?.orgId !== user.id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
 
     if (!activity) {
       res.status(404).json({ message: 'Activity not found' });

@@ -1,8 +1,9 @@
 import { Activity, InsertActivity } from '@shared/db/schema-types';
 import { apiUrl } from '../global';
+import { authedFetch } from '../utilities/authed-fetch';
 
 export async function fetchActivities(orgId: number): Promise<Activity[]> {
-  const response = await fetch(`${apiUrl}/activities?orgId=${orgId}`);
+  const response = await authedFetch(`${apiUrl}/activities?orgId=${orgId}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
@@ -17,7 +18,7 @@ export async function fetchActivities(orgId: number): Promise<Activity[]> {
 }
 
 export async function fetchActivity(activityId: number): Promise<Activity> {
-  const response = await fetch(`${apiUrl}/activities/${activityId}`);
+  const response = await authedFetch(`${apiUrl}/activities/${activityId}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
@@ -32,7 +33,7 @@ export async function fetchActivity(activityId: number): Promise<Activity> {
 export async function createOrUpdateActivity(activity: InsertActivity) {
   const isCreateMode = !activity.activityId;
 
-  const response = await fetch(
+  const response = await authedFetch(
     `${apiUrl}/activities${isCreateMode ? '' : `/${activity.activityId}`}`, {
       method: isCreateMode ? 'POST' : 'PUT',
       headers: {

@@ -26,5 +26,44 @@ export const AccountModel = {
       .from(users)
       .leftJoin(accounts, eq(users.id, accounts.id))
       .where(eq(users.id, id));
+  },
+
+  getAccount: async (email: string) => {
+    return db.select()
+      .from(accounts)
+      .where(eq(accounts.email, email))
+      .limit(1);
+  },
+
+  createOrgAccount: async (accountData: { email: string, passwordHash: string, salt: string }, orgData: { name: string, profilePhotoUrl?: string, address?: string, website?: string }) => {
+    const newOrgAccount = await db.transaction(async (tx) => {
+      const [newAccount] = await tx.insert(accounts)
+        .values(accountData)
+        .returning();
+      
+      await tx.insert(organizations)
+        .values({ ...orgData, id: newAccount.id })
+        .returning();
+
+      return newAccount.id;
+    });
+    
+    return newOrgAccount;
+  },
+
+  createUserAccount: async (accountData: { email: string, passwordHash: string, salt: string }, userData: { username: string, profilePhotoUrl?: string }) => {
+    const newOrgAccount = await db.transaction(async (tx) => {
+      const [newAccount] = await tx.insert(accounts)
+        .values(accountData)
+        .returning();
+      
+      await tx.insert(users)
+        .values({ ...userData, id: newAccount.id })
+        .returning();
+
+      return newAccount.id;
+    });
+    
+    return newOrgAccount;
   }
 }

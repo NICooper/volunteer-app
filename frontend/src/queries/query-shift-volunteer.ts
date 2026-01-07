@@ -1,5 +1,6 @@
 import { ShiftVolunteer, ShiftVolunteerGeneral } from '@shared/db/schema-types';
 import { apiUrl } from '../global';
+import { authedFetch } from '../utilities/authed-fetch';
 
 export async function fetchShiftVolunteers({ shiftId, orgId }: {shiftId: number, orgId: number}): Promise<ShiftVolunteerGeneral[]> {
 
@@ -13,7 +14,7 @@ export async function fetchShiftVolunteers({ shiftId, orgId }: {shiftId: number,
 
   const query = queryArray.length > 0 ? `?${queryArray.join('&')}` : '';
 
-  const response = await fetch(`${apiUrl}/shiftVolunteers${query}`);
+  const response = await authedFetch(`${apiUrl}/shiftVolunteers${query}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
@@ -22,7 +23,7 @@ export async function fetchShiftVolunteers({ shiftId, orgId }: {shiftId: number,
 }
 
 export async function fetchShiftVolunteer({ shiftId, userId }: {shiftId: number, userId: number}): Promise<ShiftVolunteer | null> {
-  const response = await fetch(`${apiUrl}/shiftVolunteers/${shiftId}/${userId}`);
+  const response = await authedFetch(`${apiUrl}/shiftVolunteers/${shiftId}/${userId}`);
 
   if (response.status === 404) {
     return null;
@@ -40,7 +41,7 @@ export async function createShiftVolunteer(shiftId: number, userId: number, form
     formJson: formJson || null
   };
 
-  const response = await fetch(`${apiUrl}/shiftVolunteers/${shiftId}/${userId}`, {
+  const response = await authedFetch(`${apiUrl}/shiftVolunteers/${shiftId}/${userId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -56,7 +57,7 @@ export async function createShiftVolunteer(shiftId: number, userId: number, form
 }
 
 export async function updateShiftVolunteer(shiftId: number, userId: number, shiftVolunteerData: Partial<ShiftVolunteer>): Promise<ShiftVolunteer> {
-  const response = await fetch(`${apiUrl}/shiftVolunteers/${shiftId}/${userId}`, {
+  const response = await authedFetch(`${apiUrl}/shiftVolunteers/${shiftId}/${userId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'

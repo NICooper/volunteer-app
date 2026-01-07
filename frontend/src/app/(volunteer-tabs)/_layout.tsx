@@ -11,7 +11,7 @@ export default function OrgTabsLayout() {
     >
       <Tabs.Screen
         name='(suggestions)'
-
+        
         options={{
           title: 'Suggestions',
           tabBarIcon: ({ color }) => (

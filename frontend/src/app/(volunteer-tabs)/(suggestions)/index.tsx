@@ -30,32 +30,8 @@ export default function ActivitiesScreen() {
   return (
     <>
       <ScrollView style={{ paddingTop: insets.top }}>
-        <List.Section>
-          <List.Subheader>
-            <Text variant='titleLarge'>Current Activities</Text>
-          </List.Subheader>
-          <View style={styles.listContainer}>
-            { currentActivities.length === 0
-              ? <Text>You don&apos;t have any current activities.</Text>
-              : currentActivities.map((a) => (
-                <ActivityCard key={a.activityId} activity={a} onPress={() => router.push({pathname: '/org/activity/view', params: { activityId: a.activityId }})} />
-              ))}
-          </View>
-        </List.Section>
-        { pastActivities.length > 0 &&
-          <List.Section>
-            <List.Subheader>
-              <Text variant='titleLarge'>Past Activities</Text>
-            </List.Subheader>
-            <View style={styles.listContainer}>
-              { pastActivities.map((a) => (
-                <ActivityCard key={a.activityId} activity={a} onPress={() => router.push({pathname: '/org/activity/view', params: { activityId: a.activityId }})} />
-              ))}
-            </View>
-          </List.Section>
-        }
+        
       </ScrollView>
-      <ThumbFAB icon='plus' label='Create Activity' pageHasNavBar onPress={() => router.navigate({ pathname: '/org/activity/edit' })} />
     </>
   );
 }

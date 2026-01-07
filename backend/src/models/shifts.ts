@@ -81,6 +81,7 @@ export const ShiftModel = {
     return db.transaction(async (tx) => {
       const insertedShift = await tx.insert(shifts).values(shift).returning({ shiftId: shifts.shiftId });
       event.shiftId = insertedShift[0].shiftId;
+      // console.log('Inserting event for shift ID:', event.shiftId);
       await tx.insert(events).values(event);
     });
   },

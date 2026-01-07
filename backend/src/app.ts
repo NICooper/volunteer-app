@@ -11,15 +11,21 @@ import { volunteersRouter } from './routes/volunteers';
 import { accountsRouter } from './routes/accounts';
 import { qrCodeRouter } from './routes/qr-codes';
 import { orgsRouter } from './routes/orgs';
+import { authRouter } from './routes/auth';
+import passport from 'passport';
+import { jwtStrategy } from './services/jwt-auth';
 
 const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
+// app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+passport.use(jwtStrategy);
 
+app.use('/auth', authRouter);
 app.use('/activities', activitiesRouter);
 app.use('/shifts', shiftsRouter);
 app.use('/shiftVolunteers', shiftVolunteersRouter);

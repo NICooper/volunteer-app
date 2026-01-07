@@ -1,5 +1,6 @@
 import { InsertEvent, InsertShift, Shift, ShiftOverview } from '@shared/db/schema-types';
 import { apiUrl } from '../global';
+import { authedFetch } from '../utilities/authed-fetch';
 
 export async function fetchFullShifts({ orgId, activityId }: {orgId?: number, activityId?: number}): Promise<ShiftOverview[]> {
 
@@ -13,7 +14,7 @@ export async function fetchFullShifts({ orgId, activityId }: {orgId?: number, ac
 
   const query = queryArray.length > 0 ? `?${queryArray.join('&')}` : '';
 
-  const response = await fetch(`${apiUrl}/shifts${query}`);
+  const response = await authedFetch(`${apiUrl}/shifts${query}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
@@ -28,7 +29,7 @@ export async function fetchFullShifts({ orgId, activityId }: {orgId?: number, ac
 }
 
 export async function fetchShift(shiftId: number): Promise<ShiftOverview> {
-  const response = await fetch(`${apiUrl}/shifts/${shiftId}`);
+  const response = await authedFetch(`${apiUrl}/shifts/${shiftId}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
@@ -43,7 +44,7 @@ export async function fetchShift(shiftId: number): Promise<ShiftOverview> {
 export async function createOrUpdateShift(shift: InsertShift, event: InsertEvent): Promise<Shift> {
   const isCreateMode = !shift.shiftId;
 
-  const response = await fetch(
+  const response = await authedFetch(
     `${apiUrl}/shifts${isCreateMode ? '' : `/${shift.shiftId}`}`, {
       method: isCreateMode ? 'POST' : 'PUT',
       headers: {
@@ -52,7 +53,7 @@ export async function createOrUpdateShift(shift: InsertShift, event: InsertEvent
       body: JSON.stringify({ shift, event })
     }
   );
-
+  console.log('Response from createOrUpdateShift:', response);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }

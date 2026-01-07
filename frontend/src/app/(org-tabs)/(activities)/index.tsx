@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { fetchActivities } from '@/src/queries/query-activity';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, RefreshControl } from 'react-native-gesture-handler';
 import { isEntirelyBeforeToday } from '@/src/utilities/period-filters';
 import { UserContext } from '../../_layout';
 import React from 'react';
@@ -17,20 +17,39 @@ export default function ActivitiesScreen() {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
 
-  const { data } = useQuery({
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const activitiesQuery = useQuery({
     queryKey: ['activities'],
     queryFn: () => fetchActivities(user?.id!),
-    staleTime: 60 * 1000
+    staleTime: 1 * 1000
+    // refetchInterval: 10 * 1000
   });
 
-  const activities = data || [];
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    if (activitiesQuery.isStale && !activitiesQuery.isFetching) {
+      activitiesQuery.refetch();
+        setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+    }
+    else {
+      setRefreshing(false);
+    }
+  }, []);
+
+  const activities = activitiesQuery.data || [];
 
   const currentActivities = activities.filter(a => !a.endTime || !isEntirelyBeforeToday(a.endTime));
   const pastActivities = activities.filter(a => a.endTime && isEntirelyBeforeToday(a.endTime));
 
   return (
     <>
-      <ScrollView style={{ paddingTop: insets.top }}>
+      <ScrollView
+        style={{ paddingTop: insets.top }}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor='black' />}
+      >
         <List.Section>
           <List.Subheader>
             <Text variant='titleLarge'>Current Activities</Text>

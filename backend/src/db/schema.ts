@@ -3,9 +3,10 @@ import { generateKey } from 'crypto';
 import { pgTable, primaryKey, uuid, serial, text, varchar, integer, timestamp, boolean, jsonb } from 'drizzle-orm/pg-core';
 
 export const accounts = pgTable('accounts', {
-  id: integer('id').primaryKey(),
+  id: serial('id').primaryKey(),
   email: varchar('email', { length: 255 }).notNull().unique(),
-  passwordHash: varchar('pw_hash', { length: 255 }).notNull()
+  passwordHash: varchar('pw_hash', { length: 44 }).notNull(),
+  salt: varchar('salt', { length: 44 }).notNull()
 });
 
 export const users = pgTable('users', {
@@ -77,8 +78,4 @@ export const qrCodes = pgTable('qr_codes', {
   generatedBy: integer('generated_by').notNull().references(() => accounts.id),
   data: jsonb('data').notNull().$type<QrJson>(),
   expiresAt: timestamp('expires_at').notNull()
-});
-
-export const test = pgTable('test', {
-  id: uuid('id').primaryKey().defaultRandom()
 });

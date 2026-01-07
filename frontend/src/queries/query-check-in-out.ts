@@ -1,5 +1,6 @@
 import { Account, InsertQrCode, QrCode, User, Event } from '@shared/db/schema-types';
 import { apiUrl } from '../global';
+import { authedFetch } from '../utilities/authed-fetch';
 
 export async function generateCheckInOutCode(action: 'checkin' | 'checkout', accountId: Account['id'], shiftId: Event['shiftId'], eventId: Event['eventId']): Promise<QrCode> {
 
@@ -12,7 +13,7 @@ export async function generateCheckInOutCode(action: 'checkin' | 'checkout', acc
     }
   };
 
-  const response = await fetch(`${apiUrl}/qr/timeclock`, {
+  const response = await authedFetch(`${apiUrl}/qr/timeclock`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -30,7 +31,7 @@ export async function generateCheckInOutCode(action: 'checkin' | 'checkout', acc
 }
 
 export async function checkInOutWithCode(qrCodeId: string, user: Pick<User, 'id'>): Promise<QrCode> {
-  const response = await fetch(`${apiUrl}/qr/timeclock/${qrCodeId}`, {
+  const response = await authedFetch(`${apiUrl}/qr/timeclock/${qrCodeId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

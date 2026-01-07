@@ -1,8 +1,9 @@
 import { OrgAccount, VolunteerAccount as UserAccount } from '@shared/db/schema-types';
 import { apiUrl } from '../global';
+import { authedFetch } from '../utilities/authed-fetch';
 
 export async function fetchOrgAccount(orgId: number): Promise<OrgAccount> {
-  const response = await fetch(`${apiUrl}/accounts/org/${orgId}`);
+  const response = await authedFetch(`${apiUrl}/accounts/org/${orgId}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
@@ -13,7 +14,7 @@ export async function fetchOrgAccount(orgId: number): Promise<OrgAccount> {
 }
 
 export async function fetchUserAccount(userId: number): Promise<UserAccount> {
-  const response = await fetch(`${apiUrl}/accounts/volunteer/${userId}`);
+  const response = await authedFetch(`${apiUrl}/accounts/volunteer/${userId}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }

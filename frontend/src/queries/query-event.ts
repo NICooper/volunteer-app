@@ -1,8 +1,9 @@
 import { Event, FullEventInfo, InsertEvent, VolunteerEventInfo } from '@shared/db/schema-types';
 import { apiUrl } from '../global';
+import { authedFetch } from '../utilities/authed-fetch';
 
 export async function fetchEvents(shiftId: number): Promise<Event[]> {
-  const response = await fetch(`${apiUrl}/events?shiftId=${shiftId}`);
+  const response = await authedFetch(`${apiUrl}/events?shiftId=${shiftId}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
@@ -17,7 +18,7 @@ export async function fetchEvents(shiftId: number): Promise<Event[]> {
 }
 
 export async function fetchFullEventInfo(eventId: number): Promise<FullEventInfo | undefined> {
-  const response = await fetch(`${apiUrl}/events/${eventId}`);
+  const response = await authedFetch(`${apiUrl}/events/${eventId}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }
@@ -32,7 +33,7 @@ export async function fetchFullEventInfo(eventId: number): Promise<FullEventInfo
 export async function createOrUpdateEvent(event: InsertEvent): Promise<Event> {
   const isCreateMode = !event.eventId;
 
-  const response = await fetch(
+  const response = await authedFetch(
     `${apiUrl}/events${isCreateMode ? '' : `/${event.eventId}`}`, {
       method: isCreateMode ? 'POST' : 'PUT',
       headers: {
@@ -72,7 +73,7 @@ export async function fetchVolunteersEvents(params: {
 
   const query = queryArray.length > 0 ? `?${queryArray.join('&')}` : '';
 
-  const response = await fetch(`${apiUrl}/volunteers/${params.userId}/events${query}`);
+  const response = await authedFetch(`${apiUrl}/volunteers/${params.userId}/events${query}`);
   if (!response.ok) {
     throw new Error(response.status + ' ' + response.statusText);
   }

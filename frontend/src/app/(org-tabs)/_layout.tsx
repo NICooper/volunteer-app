@@ -10,11 +10,11 @@ export default function OrgTabsLayout() {
   return (
     <Tabs
       tabBar={(props) => <PaperExpoNavBar {...props} />}
+      detachInactiveScreens={true}
       screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: theme.colors.background } }}
     >
       <Tabs.Screen
         name='(activities)'
-
         options={{
           title: 'Activities',
           tabBarIcon: ({ color }) => (

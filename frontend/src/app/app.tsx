@@ -9,17 +9,18 @@ export default function App() {
   const theme = useTheme();
   const { user } = React.useContext(UserContext);
 
+  // console.log('Current user in App layout:', user);
   SystemUI.setBackgroundColorAsync(theme.colors.background);
 
   return (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.colors.background }}}>
       <Stack.Protected guard={!user}>
-        <Stack.Screen name='login' options={{ headerShown: false }} />
+        <Stack.Screen name='(auth)' options={{ headerShown: false }} />
       </Stack.Protected>
       <Stack.Protected guard={user?.role === 'org'}>
         <Stack.Screen name='(org-tabs)' options={{ headerShown: false }} />
       </Stack.Protected>
-      <Stack.Protected guard={user?.role === 'volunteer'}>
+      <Stack.Protected guard={user?.role === 'user'}>
         <Stack.Screen name='(volunteer-tabs)' options={{ headerShown: false }} />
       </Stack.Protected>
     </Stack>

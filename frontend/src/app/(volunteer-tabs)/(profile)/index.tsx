@@ -11,6 +11,7 @@ import { isEntirelyAfterToday, isSometimeToday } from '@/src/utilities/period-fi
 import ListAccordion from '@/src/components/list-accordion';
 import EventCard from '@/src/components/volunteer/event-card';
 import { ScrollView } from 'react-native-gesture-handler';
+import { clearAccessJwt } from '@/src/utilities/jwt';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -68,7 +69,7 @@ export default function ProfileScreen() {
             buttonColor={theme.colors.errorContainer}
             textColor={theme.colors.onErrorContainer}
             style={{ borderColor: theme.colors.errorContainer }}
-            onPress={() => { setUser(undefined); }}
+            onPress={() => { clearAccessJwt(); setUser(undefined); }}
           >
             Logout
           </Button>

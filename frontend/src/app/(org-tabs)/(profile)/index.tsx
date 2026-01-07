@@ -5,6 +5,7 @@ import { UserContext } from '../../_layout';
 import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { fetchOrgAccount } from '@/src/queries/query-account';
+import { clearAccessJwt } from '@/src/utilities/jwt';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function ProfileScreen() {
           buttonColor={theme.colors.errorContainer}
           textColor={theme.colors.onErrorContainer}
           style={{ borderColor: theme.colors.errorContainer }}
-          onPress={() => { setUser(undefined); }}
+          onPress={() => { clearAccessJwt(); setUser(undefined); }}
         >
           Logout
         </Button>

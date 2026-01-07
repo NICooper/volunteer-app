@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import { createActivity, getActivities, getActivity, updateActivity } from '../controllers/activities';
+import { jwtAuth } from '../services/jwt-auth';
+import passport from 'passport';
 
 export const activitiesRouter = Router();
 
-activitiesRouter.get('', getActivities);
+activitiesRouter.get('', jwtAuth, getActivities);
 
-activitiesRouter.post('', createActivity);
+activitiesRouter.post('', jwtAuth, createActivity);
 
-activitiesRouter.get('/:id', getActivity);
+activitiesRouter.get('/:id', jwtAuth, getActivity);
 
-activitiesRouter.put('/:id', updateActivity);
+activitiesRouter.put('/:id', jwtAuth, updateActivity);
